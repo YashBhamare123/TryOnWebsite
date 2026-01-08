@@ -34,14 +34,14 @@ const OpensourceSection = () => {
             icon: Github,
             title: "GitHub Repository",
             description: "Full source code, models, and documentation",
-            href: "https://github.com",
+            href: "https://github.com/YashBhamare123/TryOnPort",
             color: "from-zinc-700 to-zinc-900",
         },
         {
             icon: Box,
-            title: "ComfyUI Workflows",
-            description: "Ready-to-use nodes for your pipelines",
-            href: "https://github.com",
+            title: "PixelForge (ComfyUI Nodes)",
+            description: "Custom node pack for virtual try-on tasks",
+            href: "https://github.com/ThunderBolt4931/comfyui_pixel_forge/tree/main",
             color: "from-primary to-primary-dark",
         },
         {
@@ -123,10 +123,10 @@ const OpensourceSection = () => {
                     <div className="relative overflow-visible">
                         <h2
                             className={`text-5xl md:text-7xl lg:text-8xl font-display font-bold transition-all ${isVisible
-                                    ? hasLanded
-                                        ? "translate-y-0 scale-100 opacity-100"
-                                        : "translate-y-0 scale-110 opacity-100"
-                                    : "-translate-y-[200px] scale-150 opacity-0"
+                                ? hasLanded
+                                    ? "translate-y-0 scale-100 opacity-100"
+                                    : "translate-y-0 scale-110 opacity-100"
+                                : "-translate-y-[200px] scale-150 opacity-0"
                                 }`}
                             style={{
                                 transitionDuration: isVisible
@@ -147,8 +147,8 @@ const OpensourceSection = () => {
                         {/* Ground impact line */}
                         <div
                             className={`absolute left-1/2 -translate-x-1/2 bottom-[-20px] h-[3px] bg-gradient-to-r from-transparent via-primary to-transparent transition-all ${hasLanded
-                                    ? "w-[400px] opacity-100"
-                                    : "w-0 opacity-0"
+                                ? "w-[400px] opacity-100"
+                                : "w-0 opacity-0"
                                 }`}
                             style={{
                                 transitionDuration: "400ms",
@@ -159,8 +159,8 @@ const OpensourceSection = () => {
 
                     <p
                         className={`text-xl text-muted-foreground mt-8 max-w-2xl mx-auto transition-all duration-700 ${hasLanded
-                                ? "opacity-100 translate-y-0"
-                                : "opacity-0 translate-y-10"
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-10"
                             }`}
                         style={{ transitionDelay: "300ms" }}
                     >

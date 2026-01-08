@@ -249,6 +249,16 @@ const documentationSections: Section[] = [
             ]
           },
           {
+            type: "link",
+            href: "https://huggingface.co/YashBhamare123/segformer_finetune/tree/main/segformer_b2_clothes_epoch_13",
+            linkText: "Subject Segmentation Model (Fine-tuned SegFormer B2)"
+          },
+          {
+            type: "link",
+            href: "https://huggingface.co/sayeed99/segformer-b3-fashion",
+            linkText: "Garment Segmentation Model (SegFormer B3 Fashion)"
+          },
+          {
             type: "heading",
             level: 4,
             content: "Custom Dataset Creation"
@@ -291,6 +301,16 @@ const documentationSections: Section[] = [
               "Mask Subtraction: Subtracted the face mask region from the original labels, isolating the area between face and upper clothing.",
               "New Class Label: The remaining area became the \"lower neck\" class—a distinct segmentation target for neckline transitions."
             ]
+          },
+          {
+            type: "link",
+            href: "https://huggingface.co/datasets/YashBhamare123/human_parsing_dataset_plus_neck",
+            linkText: "Custom Human Parsing Dataset (with lower-neck labels)"
+          },
+          {
+            type: "link",
+            href: "https://huggingface.co/datasets/mattmdjaga/human_parsing_dataset",
+            linkText: "Original Human Parsing Dataset (base)"
           },
           {
             type: "heading",
@@ -664,6 +684,16 @@ const documentationSections: Section[] = [
               ["ACE++ LoRA", "Subject-consistency adapter (enabled for logo pipeline only)"],
               ["LoRA HotSwap", "Enables dynamic switching between LoRA weights"]
             ]
+          },
+          {
+            type: "link",
+            href: "https://huggingface.co/black-forest-labs/FLUX.1-Redux-dev/tree/main",
+            linkText: "FLUX Redux Adapter (Image Conditioning)"
+          },
+          {
+            type: "link",
+            href: "https://huggingface.co/ali-vilab/ACE_Plus/blob/main/subject/comfyui_subject_lora16.safetensors",
+            linkText: "ACE++ Subject LoRA (Subject Consistency)"
           },
           {
             type: "heading",

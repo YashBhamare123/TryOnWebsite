@@ -22,7 +22,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <img src="/attira-logo.png" alt="Attira" className="w-12 h-12 object-contain" />
             <span
-              className="font-display font-light text-3xl tracking-tight text-gradient"
+              className="font-display font-semibold text-3xl tracking-tight text-gradient"
             >
               Attira
             </span>
@@ -58,6 +58,7 @@ const Navbar = () => {
               <Button
                 variant="gradient"
                 size="sm"
+                className="uppercase tracking-[0.15em] font-semibold"
               >
                 Launch App
               </Button>
@@ -95,7 +96,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="gradient" className="w-full mt-2">
+                <Button variant="gradient" className="w-full mt-2 uppercase tracking-[0.15em] font-semibold">
                   Launch App
                 </Button>
               </a>

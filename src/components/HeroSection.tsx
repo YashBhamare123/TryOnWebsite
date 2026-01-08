@@ -37,7 +37,7 @@ const HeroSection = () => {
           </div>
 
           {/* Headline - Slim and Elegant */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight leading-[0.95] mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-semibold tracking-tight leading-[0.95] mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             <span className="text-foreground">Introducing</span>
             <br />
             <span className="flex items-center justify-center gap-4">
@@ -70,22 +70,6 @@ const HeroSection = () => {
                 Try Product
               </Button>
             </a>
-          </div>
-
-          {/* Stats - Interactive Cards */}
-          <div className="grid grid-cols-3 gap-8 max-w-xl mx-auto mt-20 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            {[
-              { value: "28+", label: "Components", color: "from-primary/20 to-transparent" },
-              { value: "3", label: "Categories", color: "from-accent/20 to-transparent" },
-              { value: "∞", label: "Possibilities", color: "from-primary-light/20 to-transparent" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center group cursor-default">
-                <div className={`relative p-4 rounded-xl bg-gradient-to-b ${stat.color} border border-border/50 group-hover:border-primary/30 transition-all duration-300 group-hover:scale-105`}>
-                  <div className="text-3xl md:text-4xl font-display font-bold text-gradient mb-1">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
