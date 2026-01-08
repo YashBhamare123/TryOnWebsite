@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attira - AI-Powered Virtual Try-On Technology</title>
+  <meta name="description"
+    content="Explore the technical architecture behind state-of-the-art virtual try-on technology. From segmentation models to deployment pipelines, powered by PyTorch, Hugging Face, and Modal." />
+  <meta name="keywords"
+    content="attira, virtual try on, AI fashion, computer vision, PyTorch, Hugging Face, Modal, segmentation, diffusion models" />
+  <link rel="canonical" href="https://attira.dev" />
+  <meta property="og:title" content="Attira - AI-Powered Virtual Try-On Technology" />
+  <meta property="og:description"
+    content="State-of-the-art virtual try-on technology documentation. Explore our AI pipeline, optimization techniques, and deployment strategies." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Attira Documentation" />
+  <meta name="twitter:description" content="Technical documentation for AI-powered virtual try-on technology." />
+  <link rel="icon" type="image/png" href="/attira-logo.png" />
+</head>
+
+<body>
+  <!-- SVG Filter for Grainy Gradient Effect -->
+  <svg width="0" height="0" aria-hidden="true" style="position: fixed;">
+    <filter id="grain" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="350" xChannelSelector="R" yChannelSelector="A"
+        result="displaced" />
+      <feBlend in="displaced" in2="SourceGraphic" mode="normal" />
+    </filter>
+  </svg>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
