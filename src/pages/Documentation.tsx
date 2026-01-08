@@ -2081,8 +2081,8 @@ const Documentation = () => {
               {documentationSections.map((section) => (
                 <div key={section.id} id={section.id} className="mb-20 scroll-mt-24">
                   {/* Section Header */}
-                  <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border">
-                    <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-foreground">
+                  <div className="flex items-start gap-4 mb-8 pb-6 border-b border-border">
+                    <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-primary [&>svg]:w-10 [&>svg]:h-10">
                       {section.icon}
                     </div>
                     <div>

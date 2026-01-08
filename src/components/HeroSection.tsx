@@ -60,7 +60,7 @@ const HeroSection = () => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="/try">
+            <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="outline"
                 size="xl"
@@ -69,7 +69,7 @@ const HeroSection = () => {
                 <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 Try Product
               </Button>
-            </Link>
+            </a>
           </div>
 
           {/* Stats - Interactive Cards */}

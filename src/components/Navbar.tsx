@@ -10,20 +10,19 @@ const Navbar = () => {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/docs", label: "Documentation" },
-    { path: "/try", label: "Try Product" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-6">
-      <div className="container mx-auto rounded-3xl shadow-2xl relative overflow-hidden" style={{ backgroundColor: 'hsl(25, 10%, 12%)' }}>
+      <div className="max-w-4xl mx-auto rounded-full shadow-2xl relative overflow-hidden" style={{ backgroundColor: 'hsl(25, 10%, 12%)' }}>
         <div className="flex items-center justify-between h-16 px-6 relative z-10">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img src="/attira-logo.png" alt="Attira" className="w-16 h-16 object-contain" />
+            <img src="/attira-logo.png" alt="Attira" className="w-12 h-12 object-contain" />
             <span
-              className="font-display font-semibold text-foreground text-xl tracking-tight"
+              className="font-display font-light text-3xl tracking-tight text-gradient"
             >
               Attira
             </span>
@@ -55,14 +54,14 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Link to="/try">
+            <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="gradient"
                 size="sm"
               >
                 Launch App
               </Button>
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,11 +94,11 @@ const Navbar = () => {
                   )}
                 </Link>
               ))}
-              <Link to="/try" onClick={() => setMobileMenuOpen(false)}>
+              <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
                 <Button variant="gradient" className="w-full mt-2">
                   Launch App
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         )}
