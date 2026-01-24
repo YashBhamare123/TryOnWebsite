@@ -2044,23 +2044,43 @@ const Documentation = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background docs-page overflow-x-hidden">
+    <div className="min-h-screen bg-background docs-page">
       <Navbar />
 
-      {/* Mobile Sidebar Toggle */}
+      {/* Mobile Sidebar Toggle - Arrow tab on edge */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-20 left-4 z-50 lg:hidden bg-card border border-border rounded-lg p-2 shadow-lg hover:bg-muted transition-colors"
+        className={`fixed top-1/2 -translate-y-1/2 z-50 lg:hidden bg-card border border-border rounded-r-lg py-4 px-1 shadow-lg hover:bg-muted transition-all duration-300 ${sidebarOpen ? "left-64" : "left-0"
+          }`}
         aria-label="Toggle sidebar"
       >
-        {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        <svg
+          className={`w-4 h-4 text-primary transition-transform duration-300 ${sidebarOpen ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
       </button>
 
-      <div className="pt-16 flex">
-        {/* Sidebar */}
+      <div className="pt-16 lg:flex">
+        {/* Sidebar - Fixed on mobile, Sticky on desktop */}
         <aside
-          className={`fixed lg:sticky top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-background border-r border-border/30 overflow-y-auto z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-            }`}
+          className={`
+            fixed lg:sticky
+            top-16 lg:top-20
+            left-0
+            h-[calc(100vh-4rem)] lg:h-[calc(100vh-5rem)]
+            w-64
+            bg-background
+            border-r border-border/30
+            overflow-y-auto
+            z-40
+            transition-transform duration-300
+            flex-shrink-0
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          `}
         >
           <div className="p-6">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
@@ -2110,7 +2130,7 @@ const Documentation = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-0 bg-background max-w-full overflow-hidden">
+        <main className="flex-1 lg:ml-0 bg-background max-w-full">
           {/* Hero Header */}
           <section className="relative py-24 overflow-hidden bg-background">
             {/* Floating elements */}
@@ -2184,10 +2204,10 @@ const Documentation = () => {
         </main>
       </div>
 
-      {/* Overlay for mobile */}
+      {/* Overlay for mobile - Solid background */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 lg:hidden"
+          className="fixed inset-0 bg-background/95 z-30 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

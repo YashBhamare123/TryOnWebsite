@@ -1,3 +1,5 @@
+import { useState, useRef, useEffect, MouseEvent } from 'react';
+
 const galleryImages = [
   {
     id: 1,
@@ -37,17 +39,103 @@ const galleryImages = [
   },
 ];
 
+// Comparison Slider Component
+const ComparisonSlider = ({ beforeImage, afterImage }: { beforeImage: string; afterImage: string }) => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const updateSliderPosition = (clientX: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    setSliderPosition(percentage);
+  };
+
+  const handleMouseDown = (e: MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    updateSliderPosition(e.clientX);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    updateSliderPosition(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Global mouse up handler
+  useEffect(() => {
+    const handleGlobalMouseUp = () => setIsDragging(false);
+    const handleGlobalMouseMove = (e: globalThis.MouseEvent) => {
+      if (isDragging) updateSliderPosition(e.clientX);
+    };
+
+    if (isDragging) {
+      window.addEventListener('mouseup', handleGlobalMouseUp);
+      window.addEventListener('mousemove', handleGlobalMouseMove);
+    }
+    return () => {
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+    };
+  }, [isDragging]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full h-full select-none overflow-hidden rounded-2xl"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+    >
+      {/* After Image (Background - full) */}
+      <img
+        src={afterImage}
+        alt="After"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        draggable={false}
+      />
+
+      {/* Before Image (Foreground - clipped by slider using clip-path) */}
+      <img
+        src={beforeImage}
+        alt="Before"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+        draggable={false}
+      />
+
+      {/* Slider Handle */}
+      <div
+        className="absolute top-0 bottom-0 w-0.5 bg-white/80 pointer-events-none"
+        style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
+      >
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-xl flex items-center justify-center border border-white/50">
+          <div className="flex gap-1">
+            <div className="w-0.5 h-5 bg-zinc-400 rounded-full" />
+            <div className="w-0.5 h-5 bg-zinc-400 rounded-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const GallerySection = () => {
   const cardHeight = 650;
-  const headerOffset = 96; // 6rem for navbar
-  const visiblePeek = 50; // Amount of previous card that stays visible
+  const headerOffset = 96;
+  const visiblePeek = 50;
   const totalCards = galleryImages.length;
-  // Calculate exact spacer needed: just enough for last card to stick
-  const lastCardStickyTop = headerOffset + ((totalCards - 1) * visiblePeek);
 
   return (
     <>
-      {/* Header Section - Light orange background shift */}
+      {/* Header Section */}
       <section data-section="gallery-header" className="relative pt-32 pb-16" style={{ background: 'linear-gradient(180deg, hsl(28, 95%, 94%) 0%, hsl(26, 90%, 91%) 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[hsl(24,100%,65%)]/25 blur-3xl pointer-events-none" />
 
@@ -68,7 +156,7 @@ const GallerySection = () => {
         </div>
       </section>
 
-      {/* Stack Reveal Gallery - Cards stack as you scroll */}
+      {/* Stack Reveal Gallery */}
       <section
         data-section="gallery"
         className="relative"
@@ -79,23 +167,16 @@ const GallerySection = () => {
             key={image.id}
             className="sticky w-full"
             style={{
-              // Each card sticks at a position that leaves previous cards peeking
-              // First card: sticks at headerOffset
-              // Second card: sticks at headerOffset + visiblePeek (so first card peeks)
-              // Third card: sticks at headerOffset + 2*visiblePeek (so first two peek)
               top: `${headerOffset + (index * visiblePeek)}px`,
               zIndex: 10 + index,
-              // Add margin to create scroll distance between cards
-              // This ensures cards start separated and stack as you scroll
               marginBottom: '40vh',
             }}
           >
             <div className="container mx-auto px-6">
               <div
-                className="group relative rounded-3xl cursor-pointer shadow-2xl transition-all duration-500"
+                className="group relative rounded-3xl shadow-2xl transition-all duration-500"
                 style={{
                   height: `${cardHeight}px`,
-                  // Add subtle shadow to emphasize stacking
                   boxShadow: '0 -10px 40px -10px rgba(0,0,0,0.15), 0 25px 50px -12px rgba(0,0,0,0.08)',
                 }}
               >
@@ -104,51 +185,42 @@ const GallerySection = () => {
                   <div className="absolute inset-0 grain-overlay-strong rounded-3xl" />
                 </div>
 
-                {/* Content - Images Only, Centered */}
-                <div className="absolute inset-0 flex items-center justify-center p-6 md:p-8">
+                {/* Content - Garment Left, Comparison Right */}
+                <div className="absolute inset-0 flex items-end justify-center p-6 md:p-8 pb-8">
                   {/* Demo badge */}
-                  <div className="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/30 backdrop-blur-sm">
+                  <div className="absolute top-5 left-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/30 backdrop-blur-sm">
                     <span className="text-zinc-900/60 font-medium text-xs uppercase tracking-widest">
                       Demo {image.id} — {image.title}
                     </span>
                   </div>
 
-                  {/* Demo Images - Garment, Subject, Output */}
-                  <div className="flex items-end justify-center gap-8 md:gap-16 lg:gap-20">
-                    {/* Garment */}
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-[280px] h-[420px] md:w-[320px] md:h-[480px] rounded-2xl overflow-hidden shadow-2xl group-hover:scale-[1.02] transition-transform duration-700">
+                  {/* Two Column Layout: Garment + Comparison Slider */}
+                  <div className="flex items-start justify-center gap-12 lg:gap-20">
+                    {/* Garment (Left) */}
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-[300px] h-[450px] md:w-[400px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl group-hover:scale-[1.02] transition-transform duration-700">
                         <img
                           src={image.garment}
                           alt="Garment"
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span className="text-base font-semibold text-zinc-900/70 uppercase tracking-widest">Garment</span>
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/30 backdrop-blur-sm">
+                        <span className="text-zinc-900/60 font-medium text-xs uppercase tracking-widest">Garment</span>
+                      </div>
                     </div>
 
-                    {/* Subject */}
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-[280px] h-[420px] md:w-[320px] md:h-[480px] rounded-2xl overflow-hidden shadow-2xl group-hover:scale-[1.02] transition-transform duration-700">
-                        <img
-                          src={image.subject}
-                          alt="Subject"
-                          className="w-full h-full object-cover"
+                    {/* Comparison Slider (Right) */}
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-[300px] h-[450px] md:w-[400px] md:h-[520px] shadow-2xl group-hover:scale-[1.02] transition-transform duration-700">
+                        <ComparisonSlider
+                          beforeImage={image.subject}
+                          afterImage={image.output}
                         />
                       </div>
-                      <span className="text-base font-semibold text-zinc-900/70 uppercase tracking-widest">Subject</span>
-                    </div>
-
-                    {/* Output */}
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-[280px] h-[420px] md:w-[320px] md:h-[480px] rounded-2xl overflow-hidden shadow-2xl group-hover:scale-[1.02] transition-transform duration-700">
-                        <img
-                          src={image.output}
-                          alt="Output"
-                          className="w-full h-full object-cover"
-                        />
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/30 backdrop-blur-sm">
+                        <span className="text-zinc-900/60 font-medium text-xs uppercase tracking-widest">Transformation</span>
                       </div>
-                      <span className="text-base font-semibold text-zinc-900/70 uppercase tracking-widest">Output</span>
                     </div>
                   </div>
                 </div>
@@ -157,7 +229,7 @@ const GallerySection = () => {
           </div>
         ))}
 
-        {/* Minimal spacer - scroll ends immediately when last card sticks */}
+        {/* Minimal spacer */}
         <div style={{ height: `${visiblePeek}px` }} />
       </section>
     </>

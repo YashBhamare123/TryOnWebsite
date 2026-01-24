@@ -1,4 +1,4 @@
-import { useState, useRef, TouchEvent } from 'react';
+import { useState, useRef, TouchEvent, MouseEvent } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const galleryImages = [
@@ -32,55 +32,69 @@ const galleryImages = [
     },
 ];
 
-const imageTypes = ['garment', 'subject', 'output'] as const;
-const imageLabels = { garment: 'Garment', subject: 'Subject', output: 'Output' };
+type ViewMode = 'garment' | 'comparison';
 
 const MobileGallerySection = () => {
     const [activeDemo, setActiveDemo] = useState(0);
-    const [cardOrder, setCardOrder] = useState([0, 1, 2]); // Stack order: [top, middle, bottom]
-    const [dragOffset, setDragOffset] = useState(0);
+    const [viewMode, setViewMode] = useState<ViewMode>('comparison');
+    const [sliderPosition, setSliderPosition] = useState(50);
     const [isDragging, setIsDragging] = useState(false);
-    const touchStartX = useRef(0);
-    const containerWidth = useRef(300);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const currentDemo = galleryImages[activeDemo];
-    const topCardIndex = cardOrder[0];
+
+    // Handle slider drag
+    const updateSliderPosition = (clientX: number) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        setSliderPosition(percentage);
+    };
 
     const handleTouchStart = (e: TouchEvent) => {
-        touchStartX.current = e.touches[0].clientX;
-        containerWidth.current = (e.currentTarget as HTMLElement).offsetWidth;
+        e.stopPropagation();
         setIsDragging(true);
+        updateSliderPosition(e.touches[0].clientX);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
         if (!isDragging) return;
-        const currentX = e.touches[0].clientX;
-        const diff = currentX - touchStartX.current;
-        setDragOffset(diff);
+        e.preventDefault();
+        e.stopPropagation();
+        updateSliderPosition(e.touches[0].clientX);
     };
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e: TouchEvent) => {
+        e.stopPropagation();
+        setIsDragging(false);
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+        updateSliderPosition(e.clientX);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
         if (!isDragging) return;
+        e.preventDefault();
+        updateSliderPosition(e.clientX);
+    };
 
-        const threshold = containerWidth.current * 0.15;
-
-        if (Math.abs(dragOffset) > threshold) {
-            // Move top card to bottom of stack
-            setCardOrder(prev => [prev[1], prev[2], prev[0]]);
-        }
-
-        setDragOffset(0);
+    const handleMouseUp = () => {
         setIsDragging(false);
     };
 
     const handlePrevDemo = () => {
         setActiveDemo((prev) => (prev > 0 ? prev - 1 : galleryImages.length - 1));
-        setCardOrder([0, 1, 2]);
+        setSliderPosition(50);
     };
 
     const handleNextDemo = () => {
         setActiveDemo((prev) => (prev < galleryImages.length - 1 ? prev + 1 : 0));
-        setCardOrder([0, 1, 2]);
+        setSliderPosition(50);
     };
 
     return (
@@ -116,7 +130,7 @@ const MobileGallerySection = () => {
                             {galleryImages.map((_, index) => (
                                 <button
                                     key={index}
-                                    onClick={() => { setActiveDemo(index); setCardOrder([0, 1, 2]); }}
+                                    onClick={() => { setActiveDemo(index); setSliderPosition(50); }}
                                     className={`h-2 rounded-full transition-all duration-300 ${activeDemo === index ? 'bg-zinc-900 w-5' : 'bg-zinc-400 w-2'
                                         }`}
                                     aria-label={`Demo ${index + 1}`}
@@ -139,72 +153,90 @@ const MobileGallerySection = () => {
                 </div>
             </section>
 
-            {/* Stacked Cards with Infinite Swipe */}
+            {/* Image Viewer Section */}
             <section
                 className="relative pb-12"
                 style={{ background: 'linear-gradient(180deg, hsl(26, 90%, 91%) 0%, hsl(24, 85%, 88%) 100%)' }}
             >
                 <div className="container mx-auto px-4">
-                    {/* Stacked Image Container */}
-                    <div
-                        className="relative mx-auto max-w-sm aspect-[3/4] touch-pan-y"
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                    >
-                        {/* Render cards in stack order (reversed so first in array is on top) */}
-                        {[...cardOrder].reverse().map((typeIndex, stackPosition) => {
-                            const type = imageTypes[typeIndex];
-                            const isTopCard = stackPosition === 2; // Last rendered = on top
-                            const stackOffset = (2 - stackPosition) * 4; // Slight offset for stacked effect
-
-                            return (
-                                <div
-                                    key={type}
-                                    className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl"
-                                    style={{
-                                        zIndex: stackPosition + 1,
-                                        transform: isTopCard && isDragging
-                                            ? `translateX(${dragOffset}px) rotate(${dragOffset * 0.03}deg)`
-                                            : `translateY(${stackOffset}px) scale(${1 - stackOffset * 0.01})`,
-                                        transition: isDragging && isTopCard ? 'none' : 'transform 0.3s ease-out',
-                                        backgroundColor: 'hsla(25, 80%, 70%, 0.25)',
-                                    }}
-                                >
-                                    <img
-                                        src={currentDemo[type]}
-                                        alt={imageLabels[type]}
-                                        className="w-full h-full object-cover"
-                                        draggable={false}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Image Type Label */}
-                    <div className="text-center mt-4">
-                        <span className="text-lg font-semibold text-zinc-900 uppercase tracking-widest">
-                            {imageLabels[imageTypes[topCardIndex]]}
-                        </span>
-                    </div>
-
-                    {/* Image Type Dots */}
-                    <div className="flex justify-center gap-2 mt-3">
-                        {imageTypes.map((type, index) => (
-                            <button
-                                key={type}
-                                onClick={() => setCardOrder([index, (index + 1) % 3, (index + 2) % 3])}
-                                className={`h-2 rounded-full transition-all duration-300 ${topCardIndex === index ? 'bg-zinc-900 w-5' : 'bg-zinc-400 w-2'
-                                    }`}
-                                aria-label={`View ${imageLabels[type]}`}
+                    {/* Image Container */}
+                    <div className="relative mx-auto max-w-sm aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
+                        {viewMode === 'garment' ? (
+                            // Garment View
+                            <img
+                                src={currentDemo.garment}
+                                alt="Garment"
+                                className="w-full h-full object-cover"
                             />
-                        ))}
+                        ) : (
+                            // Comparison Slider View
+                            <div
+                                ref={containerRef}
+                                className="relative w-full h-full select-none touch-none"
+                                onTouchStart={handleTouchStart}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
+                                onMouseDown={handleMouseDown}
+                                onMouseMove={handleMouseMove}
+                                onMouseUp={handleMouseUp}
+                                onMouseLeave={handleMouseUp}
+                                style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+                            >
+                                {/* Output Image (Background - full) */}
+                                <img
+                                    src={currentDemo.output}
+                                    alt="Output"
+                                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                                    draggable={false}
+                                />
+
+                                {/* Subject Image (Foreground - clipped by slider using clip-path) */}
+                                <img
+                                    src={currentDemo.subject}
+                                    alt="Subject"
+                                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                                    style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                                    draggable={false}
+                                />
+
+                                {/* Slider Handle */}
+                                <div
+                                    className="absolute top-0 bottom-0 w-0.5 bg-white/80 pointer-events-none"
+                                    style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
+                                >
+                                    {/* Handle Circle */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center border border-white/50">
+                                        <div className="flex gap-0.5">
+                                            <div className="w-0.5 h-4 bg-zinc-400 rounded-full" />
+                                            <div className="w-0.5 h-4 bg-zinc-400 rounded-full" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    <p className="text-center text-zinc-500 text-xs mt-3">
-                        Swipe to cycle through images
-                    </p>
+                    {/* View Mode Toggle - Glassy Style */}
+                    <div className="flex justify-center gap-3 mt-4">
+                        <button
+                            onClick={() => setViewMode('garment')}
+                            className={`px-3 py-1.5 rounded-full backdrop-blur-sm transition-all duration-300 ${viewMode === 'garment'
+                                    ? 'bg-zinc-900/20'
+                                    : 'bg-white/30 hover:bg-white/40'
+                                }`}
+                        >
+                            <span className="text-zinc-900/60 font-medium text-xs uppercase tracking-widest">Garment</span>
+                        </button>
+                        <button
+                            onClick={() => setViewMode('comparison')}
+                            className={`px-3 py-1.5 rounded-full backdrop-blur-sm transition-all duration-300 ${viewMode === 'comparison'
+                                    ? 'bg-zinc-900/20'
+                                    : 'bg-white/30 hover:bg-white/40'
+                                }`}
+                        >
+                            <span className="text-zinc-900/60 font-medium text-xs uppercase tracking-widest">Transformation</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </>
