@@ -1,5 +1,3 @@
-import { ArrowUpRight } from "lucide-react";
-
 const galleryImages = [
   {
     id: 1,
@@ -152,13 +150,6 @@ const GallerySection = () => {
                       </div>
                       <span className="text-base font-semibold text-zinc-900/70 uppercase tracking-widest">Output</span>
                     </div>
-                  </div>
-                </div>
-
-                {/* Arrow indicator */}
-                <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center">
-                    <ArrowUpRight className="w-6 h-6 text-zinc-900/70" />
                   </div>
                 </div>
               </div>

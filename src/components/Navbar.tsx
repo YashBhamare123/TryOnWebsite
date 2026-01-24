@@ -15,14 +15,17 @@ const Navbar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="fixed top-4 left-0 right-0 z-50 px-6">
-      <div className="max-w-4xl mx-auto rounded-full shadow-2xl relative overflow-hidden" style={{ backgroundColor: 'hsl(25, 10%, 12%)' }}>
-        <div className="flex items-center justify-between h-16 px-6 relative z-10">
+    <nav className="fixed top-4 left-0 right-0 z-50 px-4 md:px-6">
+      <div
+        className={`max-w-4xl mx-auto shadow-2xl relative ${mobileMenuOpen ? 'rounded-3xl' : 'rounded-full'}`}
+        style={{ backgroundColor: 'hsl(25, 10%, 12%)' }}
+      >
+        <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6 relative z-10">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <img src="/attira-logo.png" alt="Attira" className="w-12 h-12 object-contain" />
+          <Link to="/" className="flex items-center gap-2 md:gap-3 group">
+            <img src="/attira-logo.png" alt="Attira" className="w-9 h-9 md:w-12 md:h-12 object-contain" />
             <span
-              className="font-display font-semibold text-3xl tracking-tight text-gradient"
+              className="font-display font-semibold text-xl md:text-3xl tracking-tight text-gradient"
             >
               Attira
             </span>
@@ -67,17 +70,17 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-foreground hover:bg-muted rounded-2xl transition-colors"
+            className="md:hidden p-2 text-foreground hover:bg-muted/50 rounded-full transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Inside container, drops down */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 px-6 border-t border-border animate-fade-in">
-            <div className="flex flex-col gap-2">
+          <div className="md:hidden px-4 pb-4 border-t border-white/10">
+            <div className="flex flex-col gap-2 pt-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -109,3 +112,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

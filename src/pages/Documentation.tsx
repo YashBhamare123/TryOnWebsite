@@ -1801,7 +1801,7 @@ final_mask_tensor = batched_masks.to(self.device, self.dtype)`
 // Render content blocks
 const ContentRenderer = ({ blocks }: { blocks: ContentBlock[] }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full">
       {blocks.map((block, index) => {
         switch (block.type) {
           case "heading":
@@ -1825,16 +1825,22 @@ const ContentRenderer = ({ blocks }: { blocks: ContentBlock[] }) => {
             );
           case "image":
             return (
-              <figure key={index} className="my-8">
-                <div className="rounded-xl overflow-hidden">
+              <figure key={index} className="my-6 md:my-8">
+                <div className="w-full">
                   <img
                     src={block.src}
                     alt={block.alt}
-                    className="w-full h-auto"
+                    className="block rounded-lg md:rounded-xl"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '70vh',
+                      objectFit: 'contain'
+                    }}
                   />
                 </div>
                 {block.caption && (
-                  <figcaption className="mt-3 text-sm text-muted-foreground text-center italic">
+                  <figcaption className="mt-2 md:mt-3 text-xs md:text-sm text-muted-foreground text-center italic px-2">
                     {block.caption}
                   </figcaption>
                 )}
@@ -1842,9 +1848,9 @@ const ContentRenderer = ({ blocks }: { blocks: ContentBlock[] }) => {
             );
           case "code":
             return (
-              <div key={index} className="my-6">
-                <pre className="bg-card border border-border rounded-xl p-4 overflow-x-auto">
-                  <code className="text-sm text-foreground font-mono whitespace-pre">
+              <div key={index} className="my-4 md:my-6">
+                <pre className="bg-card border border-border rounded-lg md:rounded-xl p-3 md:p-4 overflow-x-auto">
+                  <code className="text-xs md:text-sm text-foreground font-mono whitespace-pre">
                     {block.content}
                   </code>
                 </pre>
@@ -1876,12 +1882,12 @@ const ContentRenderer = ({ blocks }: { blocks: ContentBlock[] }) => {
             );
           case "table":
             return (
-              <div key={index} className="my-6 overflow-x-auto">
-                <table className="w-full border-collapse border border-border rounded-lg overflow-hidden">
+              <div key={index} className="my-4 md:my-6 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                <table className="w-full border-collapse border border-border rounded-lg overflow-hidden min-w-[400px]">
                   <thead>
                     <tr className="bg-muted/50">
                       {block.headers?.map((header, i) => (
-                        <th key={i} className="border border-border px-4 py-3 text-left text-sm font-semibold text-foreground">
+                        <th key={i} className="border border-border px-2 md:px-4 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-foreground">
                           {header}
                         </th>
                       ))}
@@ -1891,7 +1897,7 @@ const ContentRenderer = ({ blocks }: { blocks: ContentBlock[] }) => {
                     {block.rows?.map((row, rowIndex) => (
                       <tr key={rowIndex} className="hover:bg-muted/30 transition-colors">
                         {row.map((cell, cellIndex) => (
-                          <td key={cellIndex} className="border border-border px-4 py-3 text-sm text-muted-foreground">
+                          <td key={cellIndex} className="border border-border px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm text-muted-foreground">
                             {cell}
                           </td>
                         ))}
@@ -1912,6 +1918,29 @@ const ContentRenderer = ({ blocks }: { blocks: ContentBlock[] }) => {
 const Documentation = () => {
   const [activeSection, setActiveSection] = useState<string>("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Handle URL hash on initial load (for navigation from other pages)
+  useEffect(() => {
+    const hash = window.location.hash.slice(1); // Remove the # 
+    if (hash) {
+      // Small delay to ensure the page content is rendered
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          const offset = 100; // Account for fixed header
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    } else {
+      // No hash - scroll to top of page
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, []);
 
   // Scroll spy: track active section and subsection
   useEffect(() => {
@@ -2015,7 +2044,7 @@ const Documentation = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background docs-page">
+    <div className="min-h-screen bg-background docs-page overflow-x-hidden">
       <Navbar />
 
       {/* Mobile Sidebar Toggle */}
@@ -2081,7 +2110,7 @@ const Documentation = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-0 bg-background">
+        <main className="flex-1 lg:ml-0 bg-background max-w-full overflow-hidden">
           {/* Hero Header */}
           <section className="relative py-24 overflow-hidden bg-background">
             {/* Floating elements */}
@@ -2090,15 +2119,15 @@ const Documentation = () => {
               <div className="absolute bottom-10 left-20 w-20 h-20 border border-primary/5 rounded-full animate-float-slow" />
             </div>
 
-            <div className="relative z-10 container mx-auto px-6 lg:px-12">
+            <div className="relative z-10 container mx-auto px-4 md:px-6 lg:px-12">
               <div className="max-w-4xl">
-                <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-xs uppercase tracking-widest mb-6">
+                <span className="inline-block px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-primary/10 text-primary font-semibold text-xs uppercase tracking-widest mb-4 md:mb-6">
                   Technical Documentation
                 </span>
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold leading-tight mb-6 text-gradient-animated">
+                <h1 className="text-3xl md:text-5xl lg:text-7xl font-display font-bold leading-tight mb-4 md:mb-6 text-gradient-animated">
                   Complete System Architecture
                 </h1>
-                <p className="text-lg text-muted-foreground max-w-2xl mt-6">
+                <p className="text-base md:text-lg text-muted-foreground max-w-2xl mt-4 md:mt-6">
                   Explore every component of our virtual try-on pipeline, from segmentation models to deployment infrastructure.
                 </p>
               </div>
@@ -2106,10 +2135,10 @@ const Documentation = () => {
           </section>
 
           {/* Documentation Content */}
-          <section className="py-20 bg-background">
-            <div className="container mx-auto px-6 lg:px-12 max-w-5xl">
+          <section className="py-12 md:py-20 bg-background w-full">
+            <div className="mx-auto px-4 md:px-6 lg:px-12 w-full max-w-5xl">
               {documentationSections.map((section) => (
-                <div key={section.id} id={section.id} className="mb-20 scroll-mt-24">
+                <div key={section.id} id={section.id} className="mb-20 scroll-mt-24 w-full max-w-full">
                   {/* Section Header */}
                   <div className="flex items-start gap-4 mb-8 pb-6 border-b border-border">
                     <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-primary [&>svg]:w-10 [&>svg]:h-10">
