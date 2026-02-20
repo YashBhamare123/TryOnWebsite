@@ -111,16 +111,30 @@ const ComparisonSlider = ({ beforeImage, afterImage }: { beforeImage: string; af
         draggable={false}
       />
 
-      {/* Slider Handle */}
+      {/* Slider Divider Line */}
       <div
-        className="absolute top-0 bottom-0 w-0.5 bg-white/80 pointer-events-none"
-        style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
+        className="absolute top-0 bottom-0 pointer-events-none"
+        style={{
+          left: `${sliderPosition}%`,
+          transform: 'translateX(-50%)',
+          width: '2px',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.95) 15%, rgba(255,255,255,0.95) 85%, transparent 100%)',
+          boxShadow: '0 0 8px rgba(255,255,255,0.3), 0 0 20px rgba(255,255,255,0.1)'
+        }}
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-xl flex items-center justify-center border border-white/50">
-          <div className="flex gap-1">
-            <div className="w-0.5 h-5 bg-zinc-400 rounded-full" />
-            <div className="w-0.5 h-5 bg-zinc-400 rounded-full" />
-          </div>
+        {/* Handle Circle */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full backdrop-blur-md flex items-center justify-center"
+          style={{
+            background: 'rgba(255, 255, 255, 0.92)',
+            border: '1px solid rgba(255, 255, 255, 0.7)',
+            boxShadow: '0 2px 16px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04)'
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 5L3.5 10L7.5 15" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12.5 5L16.5 10L12.5 15" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
       </div>
     </div>

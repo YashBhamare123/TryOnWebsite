@@ -71,7 +71,7 @@ const TryProduct = () => {
               {/* CTA Button */}
               <div className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
                 <a
-                  href="https://example.com/virtual-try-on"
+                  href="https://attira-tryon.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -156,7 +156,7 @@ const TryProduct = () => {
             {/* Final CTA */}
             <div className="text-center mt-16">
               <a
-                href="https://example.com/virtual-try-on"
+                href="https://attira-tryon.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

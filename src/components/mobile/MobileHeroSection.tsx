@@ -57,7 +57,7 @@ const MobileHeroSection = () => {
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </Link>
-                        <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer" className="w-full">
+                        <a href="https://attira-tryon.vercel.app/" target="_blank" rel="noopener noreferrer" className="w-full">
                             <Button
                                 variant="outline"
                                 size="lg"

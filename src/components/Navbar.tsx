@@ -57,7 +57,7 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <a href="https://attira-tryon.vercel.app/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="gradient"
                 size="sm"
@@ -98,7 +98,7 @@ const Navbar = () => {
                   )}
                 </Link>
               ))}
-              <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
+              <a href="https://attira-tryon.vercel.app/" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
                 <Button variant="gradient" className="w-full mt-2 uppercase tracking-[0.15em] font-semibold">
                   Launch App
                 </Button>

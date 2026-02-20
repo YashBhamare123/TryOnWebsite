@@ -60,7 +60,7 @@ const HeroSection = () => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <a href="https://tryon-beige.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <a href="https://attira-tryon.vercel.app/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="outline"
                 size="xl"
